@@ -52,49 +52,9 @@ touch bd.sql conexao.php geraSenha.php valida_sessao.php logout.php
 
 ## ETAPA 1 — Banco de Dados
 
-Abra o phpMyAdmin (normalmente em `http://localhost/phpmyadmin`), vá em **SQL** e cole o conteúdo abaixo em `bd.sql`, depois execute:
+Abra o phpMyAdmin (normalmente em `http://localhost/phpmyadmin`), selecione **Importar** e importe o arquivo `bd.sql` deste projeto. O script cria o banco e as três tabelas e insere registros iniciais de demonstração, podendo ser executado novamente sem duplicar esses registros.
 
-```sql
--- Criar banco de dados com nome modificado
-CREATE DATABASE sistema_musical_v2;
-
--- Usar o banco de dados
-USE sistema_musical_v2;
-
--- Criar tabela de usuários
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(50) NOT NULL,
-    senha VARCHAR(255) NOT NULL
-);
-
--- Criar tabela de desenvolvedoras (artistas) (removido biografia, email e website)
-CREATE TABLE artistas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    genero VARCHAR(50),
-    pais VARCHAR(50),
-    imagem VARCHAR(255)
-);
-
--- Criar tabela de jogos (musicas) (modificada para incluir link do YouTube e remover campos)
-CREATE TABLE musicas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    artista_id INT,
-    titulo VARCHAR(100) NOT NULL,
-    album VARCHAR(100),
-    genero VARCHAR(50),
-    youtube_link VARCHAR(255), -- Novo campo para link do YouTube
-    letra TEXT,
-    imagem_capa VARCHAR(255),
-    FOREIGN KEY (artista_id) REFERENCES artistas(id)
-);
-
--- Inserir usuário padrão "admin" e senha "123"
-INSERT INTO usuarios (usuario, senha) VALUES ('admin', '$2y$12$zw1c2aDgt4HHnAzXc3g3dOV6Mn96Dm2UaSIketIhYe1xmtuaJG6qa');
-```
-
-> A senha `123` do usuário `admin` já está inserida como **hash bcrypt** (Caso  precise gere uma nova usando o arquivo abaixo. Nunca guarde senhas em texto puro no banco.
+> O usuário de teste é `admin`, com senha `123`, armazenada como **hash bcrypt**. Os jogos de demonstração não têm link de gameplay nem imagens; adicione esses dados pela aplicação. Nunca guarde senhas em texto puro no banco.
 
 ## Gerar senha segura (`geraSenha.php`)
 ```php
@@ -108,7 +68,7 @@ echo password_hash('123', PASSWORD_BCRYPT);
 ### ✅ Teste da Etapa 1
 1. No phpMyAdmin, clique no banco `sistema_musical_v2` na coluna esquerda.
 2. Confirme que existem 3 tabelas: `usuarios`, `artistas`, `musicas`.
-3. Abra a tabela `usuarios` → deve haver 1 linha com `usuario = admin` e uma `senha` começando com `$2y$12$...`.
+3. Confira o usuário `admin` em `usuarios` e os registros de demonstração em `artistas` e `musicas`.
 
 ---
 
