@@ -142,7 +142,7 @@ Utilitário de linha de comando para gerar o hash bcrypt de qualquer senha — �
 php geraSenha.php
 ```
 
-Deve imprimir uma string parecida com `$2y$12$........................................`. Esse é o formato correto de uma senha criptografada com bcrypt — é exatamente esse tipo de valor que já está salvo na tabela `usuarios` (Etapa 1).
+Deve imprimir uma string parecida com . Esse é o formato correto de uma senha criptografada com bcrypt — é exatamente esse tipo de valor que já está salvo na tabela `usuarios` (Etapa 1).
 
 ---
 
