@@ -50,7 +50,7 @@ include('valida_sessao.php');
         </div>
 
         <div class="menu-card">
-            <a href="cadastro_musica.php">
+            <a href="cadastro_jogo.php">
                 <div class="menu-card-icon">🎮</div>
                 <div class="menu-card-title">Cadastrar Jogos</div>
                 <div class="menu-card-desc">Adicione jogos ao sistema</div>

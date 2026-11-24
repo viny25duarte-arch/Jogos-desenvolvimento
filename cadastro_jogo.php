@@ -1,7 +1,7 @@
 <?php
 /*
  * =============================================
- * ARQUIVO: cadastro_musica.php (versão final — + capa do álbum)
+ * ARQUIVO: cadastro_jogo.php (versão final — + capa do álbum)
  * =============================================
  *
  * Cada música pertence a um artista (artista_id é
@@ -111,15 +111,21 @@ if (isset($_GET['delete_id'])) {
     $arq  = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    // Remove o arquivo físico da imagem, se existir
-    if ($arq && !empty($arq['imagem_capa']) && file_exists($arq['imagem_capa'])) {
-        unlink($arq['imagem_capa']); // unlink() = apagar arquivo do servidor
-    }
-
     $stmt = $conn->prepare("DELETE FROM musicas WHERE id = ?");
     $stmt->bind_param("i", $id);
-    $class    = $stmt->execute() ? "success" : "error";
-    $mensagem = $class === "success" ? "Jogo excluído!" : "Erro: " . $stmt->error;
+    if (!$stmt->execute()) {
+        $class = "error";
+        $mensagem = "Erro ao excluir jogo: " . $stmt->error;
+    } elseif ($stmt->affected_rows === 0) {
+        $class = "error";
+        $mensagem = "Jogo não encontrado para exclusão.";
+    } else {
+        $class = "success";
+        $mensagem = "Jogo excluído!";
+        if ($arq && !empty($arq['imagem_capa']) && file_exists($arq['imagem_capa'])) {
+            unlink($arq['imagem_capa']);
+        }
+    }
     $stmt->close();
 }
 
@@ -267,7 +273,7 @@ if ($artista_id_filtro) {
                 <?php echo $musica ? '💾 Atualizar' : '➕ Cadastrar'; ?>
             </button>
             <?php if ($musica): ?>
-                <a href="cadastro_musica.php<?php echo $artista_id_filtro ? '?artista_id='.$artista_id_filtro : ''; ?>"
+                <a href="cadastro_jogo.php<?php echo $artista_id_filtro ? '?artista_id='.$artista_id_filtro : ''; ?>"
                    class="btn-back">✖ Cancelar</a>
             <?php endif; ?>
         </div>

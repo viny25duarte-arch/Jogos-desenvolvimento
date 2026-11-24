@@ -83,14 +83,21 @@ if (isset($_GET['delete_id'])) {
     $arq  = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    if ($arq && !empty($arq['imagem_capa']) && file_exists($arq['imagem_capa'])) {
-        unlink($arq['imagem_capa']);
-    }
-
     $stmt = $conn->prepare("DELETE FROM musicas WHERE id = ?");
     $stmt->bind_param("i", $id);
-    $tipo_msg = $stmt->execute() ? "success" : "error";
-    $mensagem = $tipo_msg === "success" ? "Jogo excluído!" : "Erro: " . $stmt->error;
+    if (!$stmt->execute()) {
+        $tipo_msg = "error";
+        $mensagem = "Erro ao excluir jogo: " . $stmt->error;
+    } elseif ($stmt->affected_rows === 0) {
+        $tipo_msg = "error";
+        $mensagem = "Jogo não encontrado para exclusão.";
+    } else {
+        $tipo_msg = "success";
+        $mensagem = "Jogo excluído!";
+        if ($arq && !empty($arq['imagem_capa']) && file_exists($arq['imagem_capa'])) {
+            unlink($arq['imagem_capa']);
+        }
+    }
     $stmt->close();
 }
 
@@ -132,7 +139,7 @@ if (!empty($params)) {
         <h2>🏆 Biblioteca de Jogos</h2>
         <div class="header-actions">
             <a href="index.php" class="btn-back">⬅ Voltar ao Menu</a>
-            <a href="cadastro_musica.php" class="btn-primary">➕ Novo Jogo</a>
+            <a href="cadastro_jogo.php" class="btn-primary">➕ Novo Jogo</a>
         </div>
     </div>
 
@@ -243,7 +250,7 @@ if (!empty($params)) {
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="cadastro_musica.php?edit_id=<?php echo $row['id']; ?>"
+                                    <a href="cadastro_jogo.php?edit_id=<?php echo $row['id']; ?>"
                                        class="btn-edit">✏️ Editar</a>
                                     <!--
                                         http_build_query($_GET) preserva os filtros ativos
